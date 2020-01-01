@@ -41,7 +41,7 @@ public class Main {
         int score1 = 0;
         int score2 = 0;
 
-        
+
 
 
     }

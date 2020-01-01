@@ -7,7 +7,7 @@ public class Card {
         if(card.length() == 3){
             value = card.substring(0,2);
             suite = card.substring(2).toUpperCase();
-        } else{
+        } else {
             value = card.substring(0,1);
             suite = card.substring(1).toUpperCase();
         }
@@ -28,7 +28,6 @@ public class Card {
         else if (this.value.equals("K")) return 13;
         else return Integer.parseInt(this.value);
     }
-
 
     @Override
     public String toString() {
