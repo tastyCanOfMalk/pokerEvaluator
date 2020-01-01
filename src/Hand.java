@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -83,11 +82,29 @@ public class Hand {
 
         int a = 0;
         int b = 0;
+        int c = 0;
+        int d = 0;
         for(int x : this.getNumericValues()){
-            if(x == arraySet.get(0)) a++;
-            else if(x == arraySet.get(1)) b++;
+            if(arraySet.size() == 1){
+                if(x == arraySet.get(0)) a++;
+            }
+            else if(arraySet.size() == 2){
+                if(x == arraySet.get(0)) a++;
+                if(x == arraySet.get(1)) b++;
+            }
+            else if(arraySet.size() == 3) {
+                if(x == arraySet.get(0)) a++;
+                if(x == arraySet.get(1)) b++;
+                if(x == arraySet.get(2)) c++;
+            }
+            else if(arraySet.size() == 4) {
+                if(x == arraySet.get(0)) a++;
+                if(x == arraySet.get(1)) b++;
+                if(x == arraySet.get(2)) c++;
+                if(x == arraySet.get(3)) d++;
+            }
         }
-        return Math.max(a,b);
+        return Math.max(Math.max(Math.max(a,b),c),d);
     }
 
     public boolean isFourKind(){
@@ -120,9 +137,14 @@ public class Hand {
         else return false;
     }
 
-
-
-
+    public String getHighCard(){
+        int tempMax = Collections.max(this.getNumericValues());
+        if(this.getNumericValues().contains(1)) return "Ace";
+        else if (tempMax == 13) return "King";
+        else if (tempMax == 12) return "Queen";
+        else if (tempMax == 11) return "Jack";
+        else return Integer.toString(tempMax);
+    }
 
 
     @Override
