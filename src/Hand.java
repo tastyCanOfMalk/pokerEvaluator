@@ -24,15 +24,27 @@ public class Hand {
         return a.size();
     }
 
-    public ArrayList<String> getValues(){
-        ArrayList<String> values = new ArrayList<String>();
-        for(Card card : aHand) values.add(card.getValue());
-        return values;
-    }
+//    public ArrayList<String> getValues(){
+//        ArrayList<String> values = new ArrayList<String>();
+//        for(Card card : aHand) values.add(card.getValue());
+//        return values;
+//    }
 
     public ArrayList<Integer> getNumericValues(){
         ArrayList<Integer> values = new ArrayList<Integer>();
         for(Card card : aHand) values.add(card.getNumericValue());
+        Collections.sort(values);
+        return values;
+    }
+
+    public ArrayList<Integer> getNumericValuesForScoring(){
+        // converts Ace to 14 instead of 1
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        for(Card card : aHand){
+            if (card.getNumericValue() == 1){
+                values.add(14);
+            } else values.add(card.getNumericValue());
+        }
         Collections.sort(values);
         return values;
     }
@@ -144,6 +156,66 @@ public class Hand {
         else if (tempMax == 12) return "Queen";
         else if (tempMax == 11) return "Jack";
         else return Integer.toString(tempMax);
+    }
+
+    public int getHighCardValue(){
+        int tempMax = Collections.max(this.getNumericValues());
+        if(this.getNumericValues().contains(1)) return 14;
+        else if (tempMax == 13) return 13;
+        else if (tempMax == 12) return 12;
+        else if (tempMax == 11) return 11;
+        else return tempMax;
+    }
+    public int getHighCardValueForStraight(){
+        int tempMax = Collections.max(this.getNumericValues());
+//        if(this.getNumericValues().contains(1)) return 11;
+        if (tempMax == 13) return 13;
+        else if (tempMax == 12) return 12;
+        else if (tempMax == 11) return 11;
+        else return tempMax;
+    }
+
+    public int getTwoPairSingleCardValue(){
+        ArrayList<Integer> arr = this.getNumericValues();
+        int single = 0;
+        for(int x : arr){
+            if(Collections.frequency(arr,x) == 1){
+                single = x;
+            }
+        }
+        if(single == 1) return 14;
+        else return single;
+    }
+
+    public int getOnePairSingleValues(){
+        ArrayList<Integer> handArray = this.getNumericValues();
+        ArrayList<Integer> singlesArray = new ArrayList<Integer>();
+        for(int x : handArray){
+            if(Collections.frequency(handArray,x) == 1){
+                singlesArray.add(x);
+            }
+        }
+        Collections.sort(singlesArray);
+        int score = (singlesArray.get(0) * 10) +
+                (singlesArray.get(1) * 100) +
+                (singlesArray.get(2) * 1000);
+        return score;
+    }
+
+    public int evaluateHand(){
+        if (this.isStraightFlush()) return 8000000 + this.getHighCardValue();
+        else if(this.isFourKind())  return 7000000 + this.getNumericValuesForScoring().get(2);
+        else if(this.isFullHouse()) return 6000000 + this.getNumericValuesForScoring().get(2);
+        else if(this.isFlush())     return 5000000 + this.getHighCardValue();
+        // straights, does A.2.3.4.5 beat 9.10.J.Q.K? assuming no
+        else if(this.isStraight())  return 4000000 + this.getHighCardValueForStraight();
+        else if(this.isThreeKind()) return 3000000 + this.getNumericValuesForScoring().get(2);
+        else if(this.isTwoPair())   return 2000000 +
+                (this.getNumericValuesForScoring().get(3) * 1000) +
+                (this.getNumericValuesForScoring().get(1) * 100) +
+                this.getTwoPairSingleCardValue();
+        else if(this.isPair())      return 1000000 + this.getOnePairSingleValues();
+        else                        return this.getHighCardValue();
     }
 
 
