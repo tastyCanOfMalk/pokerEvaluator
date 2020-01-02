@@ -5,10 +5,10 @@ public class Card {
 
     public Card(String card){
         if(card.length() == 3){
-            value = card.substring(0,2);
+            value = card.substring(0,2).toUpperCase();
             suite = card.substring(2).toUpperCase();
         } else {
-            value = card.substring(0,1);
+            value = card.substring(0,1).toUpperCase();
             suite = card.substring(1).toUpperCase();
         }
     }
