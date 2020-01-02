@@ -4,68 +4,67 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Hand a = new Hand("4H 3H 7H 6H 5H");
-        Hand b = new Hand("4H 6H 6H 6H 6H");
-        Hand c = new Hand("4H 3H 3H 4H 3H");
-        Hand d = new Hand("4H 3H 3H 2H 3H");
-        Hand e = new Hand("AH 3H 4H 2D 5H");
-        Hand f = new Hand("4H KH KS KD 5H");
-        Hand g = new Hand("4H 3H 3H 4S 5H");
-        Hand h = new Hand("9S 3H 3H 4S 5H");
-        Hand i = new Hand("9S 10C 2D 4S 5H");
+        Scanner reader = new Scanner(System.in);
 
-//        System.out.println(evaluateHand(a));
-//        System.out.println(evaluateHand(b));
-//        System.out.println(evaluateHand(c));
-//        System.out.println(evaluateHand(d));
-//        System.out.println(evaluateHand(e));
-//        System.out.println(evaluateHand(f));
-//        System.out.println(evaluateHand(g));
-//        System.out.println(evaluateHand(h));
-//        System.out.println(evaluateHand(i));
-//        System.out.println(a.evaluateHand());
+        while(true){
 
-        Hand fk1 = new Hand("2H 2S 5H 4S 3H");
-        Hand fk2 = new Hand("2H 2H 6H 5S 4H");
-        Hand fk3 = new Hand("2H 2H 6H 5S 3S");
-        System.out.println(fk1.getNumericValuesForScoring());
-        System.out.println(fk1.evaluateHand());
-        System.out.println(fk2.getNumericValuesForScoring());
-        System.out.println(fk2.evaluateHand());
-        System.out.println(fk3.getNumericValuesForScoring());
-        System.out.println(fk3.evaluateHand());
+            System.out.print("Black: ");
+            String black = reader.nextLine();
+            if(black.isEmpty()) break;
 
-//        ArrayList<Integer> testA = fk3.getNumericValues();
-////        System.out.println(testA);
-////        System.out.println(testA.get(3));
+            System.out.print("White: ");
+            String white = reader.nextLine();
+            if(white.isEmpty()) break;
+
+            Hand w = new Hand(white);
+            Hand b = new Hand(black);
+
+            System.out.println(compareHands(w,b));
+        }
+
+        System.out.println("Thanks for playing!");
+
+//        Hand a = new Hand("2H 5D 7S AC 6D");
+//        Hand b = new Hand("3C 2H 6S 9C KH");
 //
-//        ArrayList<Integer> singlesArray = new ArrayList<Integer>();
-//        for(int x : testA){
-//            if(Collections.frequency(testA,x) == 1){
-//                singlesArray.add(x);
-//            }
-//        }
-//        Collections.sort(singlesArray);
-//        System.out.println(singlesArray);
-
-//        System.out.println(single);
-//        System.out.println(Collections.frequency(testA,9));
-
-
+//        Hand c = new Hand("2H 2S 2C 3D 3H");
+//        Hand d = new Hand("3S 3S 3S QS QS");
+//
+//        Hand e = new Hand("2H 3D 5S 4C 6D");
+//        Hand f = new Hand("2h 3H 4S 8C KH");
+//
+//        Hand g = new Hand("2H 3D 5S 9C KD");
+//        Hand h = new Hand("2D 3H 5C 9S KH");
+//
+//        System.out.println(compareHands(a,b));
+//        System.out.println(compareHands(c,d));
+//        System.out.println(compareHands(e,f));
+//        System.out.println(compareHands(g,h));
     }
 
-    public static String typeOfHand(Hand hand){
-        if(hand.isStraightFlush()) return "Straight flush";
-        else if(hand.isFourKind()) return "Four kind";
-        else if(hand.isFullHouse()) return "Full house";
-        else if(hand.isFlush()) return "Flush";
-        else if(hand.isStraight()) return "Straight";
-        else if(hand.isThreeKind()) return "Three of a kind";
-        else if(hand.isTwoPair()) return "Two pair";
-        else if(hand.isPair()) return "One pair";
-        else return "High card: " + hand.getHighCard();
+    public static String compareHands(Hand white, Hand black){
+        int whiteScore = white.evaluateHand();
+        int blackScore = black.evaluateHand();
+
+        if (whiteScore > blackScore) return "White wins. - with " + typeOfHand(white, black);
+        else if (blackScore > whiteScore) return "Black wins. - with " + typeOfHand(black, white);
+        else if (blackScore == whiteScore) return "Tie.";
+        else return "Error comparing hands.";
     }
 
-
-
+    public static String typeOfHand(Hand hand1, Hand hand2){
+        if(hand1.isStraightFlush())  return "straight flush";
+        else if(hand1.isFourKind())  return "four of a kind";
+        else if(hand1.isFullHouse()){
+            int h1 = hand1.getNumericValuesForScoring().get(2);
+            int h2 = hand2.getNumericValuesForScoring().get(2);
+            return "full house: " + h1 + " over " + h2;
+        }
+        else if(hand1.isFlush())     return "flush";
+        else if(hand1.isStraight())  return "straight";
+        else if(hand1.isThreeKind()) return "three of a kind";
+        else if(hand1.isTwoPair())   return "two pair";
+        else if(hand1.isPair())      return "one pair";
+        else return "high card: " + hand1.getHighCard();
+    }
 }
